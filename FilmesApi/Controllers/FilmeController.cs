@@ -1,4 +1,6 @@
-﻿using FilmesApi.Data;
+﻿using AutoMapper;
+using FilmesApi.Data;
+using FilmesApi.Dtos;
 using FilmesApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,15 +16,18 @@ namespace FilmesApi.Controllers
     {
 
         private FilmeContext _context;
+        private IMapper _mapper;
 
-        public FilmeController(FilmeContext conxtext)
+        public FilmeController(FilmeContext context, IMapper mapper)
         {
-              _context = conxtext;   
+            _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public IActionResult AdicionaFilme([FromBody] Filme filme)
+        public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
         {
+            Filme filme = _mapper.Map<Filme>(filmeDto);
             this._context.Filmes.Add(filme);
             _context.SaveChanges();
 
@@ -44,9 +49,42 @@ namespace FilmesApi.Controllers
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
 
-            if (filme != null) return Ok(filme);
+            if (filme != null)
+            {
+                ReadFilmeDto readFilmeDto = _mapper.Map<ReadFilmeDto>(filme);
+                readFilmeDto.HoraDaConsulta = DateTime.Now;
+                return Ok(readFilmeDto);
+            }
 
             return NotFound();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult AtualizaFilme(int id, [FromBody] UpdateFilmeDto filmeDto)
+        {
+            Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
+
+            if (filme == null) return NotFound();
+
+            _mapper.Map(filmeDto, filme);
+
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletaFilme(int id)
+        {
+            Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
+
+            if (filme == null) return NotFound();
+
+
+            _context.Remove(filme);
+            _context.SaveChanges();
+
+            return NoContent();
         }
     }
 }
