@@ -1,0 +1,19 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FilmesApi.Models
+{
+    public class Class
+    {
+
+        [Key]
+        [Required]
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "O campo de nome é obrigatório")]
+        public string Nome { get; set; }
+
+        public int EnderecoFK { get; set; }
+
+        public int GerenteFK { get; set; }
+    }
+}
