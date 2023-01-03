@@ -1,14 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace FilmesApi.Dtos
+namespace FilmesApi.Data.Dtos.Filme
 {
-    public class ReadFilmeDto
+    public class UpdateFilmeDto
     {
-
-        [Key]
-        [Required]
-        public int Id { get; set; }
 
         [Required(ErrorMessage = "o campo titulo é obrigatório")]
         public string Titulo { get; set; }
@@ -21,7 +16,5 @@ namespace FilmesApi.Dtos
 
         [Range(1, 600, ErrorMessage = "A duração dever ter no mínimo 1 e no máximo 600 minutos")]
         public int Duracao { get; set; }
-
-        public DateTime HoraDaConsulta { get; set; }
     }
 }
