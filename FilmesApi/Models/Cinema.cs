@@ -2,7 +2,7 @@
 
 namespace FilmesApi.Models
 {
-    public class Class
+    public class Cinema
     {
 
         [Key]
