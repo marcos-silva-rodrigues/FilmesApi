@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FilmesApi.Data.Dtos.Cinema;
+using Castle.Core.Internal;
 
 namespace FilmesApi.Controllers
 {
@@ -34,9 +35,22 @@ namespace FilmesApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Cinema> RecuperaCinemas()
+        public IActionResult RecuperaCinemas([FromQuery] string nomeDoFilme)
         {
-            return _context.Cinemas;
+            List<Cinema> cinemas = _context.Cinemas.ToList();
+            if (cinemas == null) return NotFound();
+
+            if (string.IsNullOrEmpty(nomeDoFilme))
+            {
+                IEnumerable<Cinema> query = from cinema in cinemas 
+                        where cinema.Sessoes.Any(sessao => 
+                        sessao.Filme.Titulo == nomeDoFilme)
+                        select cinema;
+                cinemas = query.ToList();
+            }
+            List<ReadCinemaDto> readDto = _mapper.Map<List<ReadCinemaDto>>(cinemas);
+
+            return Ok(readDto);
         }
 
         [HttpGet("{id}")]
