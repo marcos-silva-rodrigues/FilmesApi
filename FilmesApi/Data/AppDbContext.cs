@@ -22,6 +22,8 @@ namespace FilmesApi.Data
                 .HasOne(cinema => cinema.Gerente)
                 .WithMany(gerente => gerente.Cinemas)
                 .HasForeignKey(cinema => cinema.GerenteId);
+                //.IsRequired(false);
+                //.OnDelete(DeleteBehavior.Restrict);
         }
 
         public DbSet<Filme> Filmes { get; set; }
