@@ -24,5 +24,7 @@ namespace FilmesApi.Data
         public DbSet<Cinema> Cinemas { get; set; }
 
         public DbSet<Endereco> Enderecos { get; set;}
-    }
+
+		public DbSet<Gerente> Gerentes { get; set; }
+	}
 }
