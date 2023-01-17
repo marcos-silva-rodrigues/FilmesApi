@@ -1,4 +1,5 @@
 using FilmesApi.Data;
+using FilmesApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +32,7 @@ namespace FilmesApi
 
             string dbConnectionString = Configuration.GetConnectionString("FilmeConnection");
             services.AddDbContext<AppDbContext>(opts => opts.UseLazyLoadingProxies().UseMySQL(dbConnectionString));
+            services.AddScoped<FilmeService, FilmeService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
