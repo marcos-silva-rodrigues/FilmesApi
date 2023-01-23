@@ -33,7 +33,8 @@ namespace FilmesApi
             string dbConnectionString = Configuration.GetConnectionString("FilmeConnection");
             services.AddDbContext<AppDbContext>(opts => opts.UseLazyLoadingProxies().UseMySQL(dbConnectionString));
             services.AddScoped<FilmeService, FilmeService>();
-            services.AddControllers();
+			services.AddScoped<GerenteService, GerenteService>();
+			services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmesApi", Version = "v1" });
