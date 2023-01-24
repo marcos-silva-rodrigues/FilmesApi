@@ -2,6 +2,7 @@
 using FilmesApi.Data;
 using FilmesApi.Data.Dtos.Sessao;
 using FilmesApi.Models;
+using FilmesApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -11,21 +12,17 @@ namespace FilmesApi.Controllers
 	[Route("[controller]")]
 	public class SessaoController: ControllerBase
 	{
-		private AppDbContext _context;
-		private IMapper _mapper;
+		private SessaoService service;
 
-		public SessaoController(AppDbContext context, IMapper mapper)
+		public SessaoController(SessaoService service)
 		{
-			_context = context;
-			_mapper = mapper;
+			this.service = service;
 		}
 
 		[HttpPost]
 		public IActionResult AdicionaSessao(CreateSessaoDto dto)
 		{
-			Sessao sessao = _mapper.Map<Sessao>(dto);
-			_context.Sessoes.Add(sessao);
-			_context.SaveChanges();
+			ReadSessaoDto sessao = service.Adiciona(dto);
 
 			return CreatedAtAction(nameof(RecuperaSessaoPorId),
 				new { Id = sessao.Id, }, sessao);
@@ -34,12 +31,11 @@ namespace FilmesApi.Controllers
 		[HttpGet("{id}")]
 		public IActionResult RecuperaSessaoPorId(int id)
 		{
-			Sessao sessao = _context.Sessoes.FirstOrDefault(sessao => sessao.Id == id);
+			ReadSessaoDto sessao = service.BuscaPorId(id);
 
 			if (sessao != null)
 			{
-				ReadSessaoDto sessaoDto = _mapper.Map<ReadSessaoDto>(sessao);
-				return Ok(sessaoDto);
+				return Ok(sessao);
 			}
 			return NotFound();
 		}
